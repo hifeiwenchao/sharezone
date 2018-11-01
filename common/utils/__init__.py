@@ -1,7 +1,19 @@
 import time
-import uuid
 import random
 from django.core import signing
+from django.core.signing import BadSignature
+import configparser
+from django.conf import settings
+import os
+
+
+config_path = os.path.join(settings.BASE_DIR, 'config.ini')
+_parser = configparser.ConfigParser()
+_parser.read(config_path)
+
+
+def config(section, option):
+    return _parser.get(section, option)
 
 
 def current_timestamp():
@@ -13,7 +25,10 @@ def current_timestamp():
 
 
 def generate_order_no():
-
+    """
+    生成订单号
+    :return:
+    """
     return time.strftime('%Y%m%d%H%M%S') + str(random.randint(100000000, 999999999))
 
 
@@ -51,6 +66,8 @@ def decrypt(src):
         raw = signing.loads(src, salt='api')
     except UnicodeDecodeError as e:
         pass
+    except BadSignature as e:
+        pass
     return raw
 
 
@@ -58,6 +75,5 @@ if __name__ == '__main__':
     print(current_timestamp())
     print(generate_order_no())
 
-    print(encrypt(dict(uid='1')))
-    print(decrypt('ZXlKMWFXUWlPaUl4SW4wOjFnOWlDQTpubHFVclRVeGtNR1h6c01wYnFiRFNrV0Z1cVk'))
-
+    # print(encrypt(dict(uid='1')))
+    # print(decrypt('ZXlKMWFXUWlPaUl4SW4wOjFnOWlDQTpubHFVclRVeGtNR1h6c01wYnFiRFNrV0Z1cVk'))

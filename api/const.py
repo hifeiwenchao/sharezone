@@ -1,4 +1,3 @@
-
 # 签到增加积分
 SIGN_IN_INTEGRAL = 5
 
@@ -51,8 +50,17 @@ class SmsExpire:
 
 class GeoTableId:
     DEMAND = 1000004772
+    SHARE = 1000004885
 
 
-
-
-
+class OrderStatus:
+    # 待支付
+    WAIT_PAY = 1
+    WAIT_DELIVERY = 2
+    SHIPPED = 3
+    WAIT_BUYER_COMMENT = 4
+    WAIT_SELLER_COMMENT = 5
+    CLOSED = 6
+    BOTH_COMMENT = 7
+    WAIT_RETURN = 8
+    RETURNNING = 9

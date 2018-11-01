@@ -1,0 +1,17 @@
+
+[AliPay]
+app_id=YOUR_APP_ID
+app_private_key=YOUR_APP_PRIVATE_KEY
+public_key=YOUR_PUBLIC_KEY
+
+[LBS]
+ak=YOUR_AK
+
+[SMS]
+access_key=YOUR_ACCESS_KEY
+secret=YOUR_SECRET
+sign_name=YOUR_SIGN_NAME
+
+
+
+

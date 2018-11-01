@@ -6,7 +6,6 @@ from api.const import SmsTemplateCode, SmsExpire
 
 class PasswordBackend(object):
     def authenticate(self, request, phone=None, password=None):
-        print(self.__class__)
         if phone and password:
             user = dao.user.get_user(phone=phone)
             if user and user.check_password(password):
@@ -19,7 +18,6 @@ class PasswordBackend(object):
 
 class SmsCodeBackend(object):
     def authenticate(self, request, phone=None, code=None):
-        print(self.__class__)
         # 检测验证码
         valid = dao.identity_code.is_valid_code(phone, code, SmsTemplateCode.LOGIN)
         if not valid:
@@ -31,7 +29,7 @@ class SmsCodeBackend(object):
             # 第一次登录，生成用户相关信息
             user = dao.user.create_user(phone=phone)
             nickname = dao.user_info.gen_nickname()
-            dao.user_info.create_user_info(nickname=nickname, user=user)
+            dao.user_info.create(nickname=nickname, user=user)
             dao.deposit_pool.create(user=user)
             dao.asset.create(user=user)
         return user
@@ -42,9 +40,7 @@ class SmsCodeBackend(object):
 
 class TokenBackend(object):
     def authenticate(self, request, token=None):
-        print(self.__class__)
         uid = check_token(token)
-        print(uid)
         if uid:
             user = dao.user.get_user(id=uid)
             return user

@@ -11,6 +11,7 @@ class CommonMiddleware(MiddlewareMixin):
         pass
 
     def process_response(self, request, response):
+        print('process response...')
         return response
 
     def process_exception(self, request, exception):

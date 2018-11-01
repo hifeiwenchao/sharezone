@@ -1,5 +1,6 @@
 
 from api.models import User
+from django.db.models import Count
 
 
 def get_users(**kwargs):

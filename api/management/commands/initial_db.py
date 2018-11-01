@@ -20,9 +20,9 @@ class Command(BaseCommand):
         connect = pymysql.connect(
             host='127.0.0.1',
             port=3308,
-            user='yiqibnb',
+            user='sharezone',
             password='1qaz#EDC',
-            db='yiqibnb'
+            db='sharezone'
         )
         cursor = connect.cursor()
         cursor.execute('select * from dict where class_id=0')

@@ -5,8 +5,7 @@ from api.exceptions.defines import ForbiddenException
 
 def auth(method):
     def wrapper(self, request, *args, **kwargs):
-        token = request.META.get('HTTP_TOKEN')
-        print('token: ', token)
+        token = request.META.get('HTTP_ACCESS_TOKEN')
         user = authenticate(token=token)
         if not user:
             raise ForbiddenException('请重新登录')

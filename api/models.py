@@ -73,7 +73,7 @@ class UserInfo(BaseModel):
 
     name = models.CharField(max_length=50, null=True, verbose_name='真实姓名')
     nickname = models.CharField(max_length=100, unique=True, verbose_name='昵称')
-    head_pic = models.CharField(max_length=300, null=True, verbose_name='头像')
+    avatar = models.ImageField(upload_to='avatar', null=True, verbose_name='头像')
     sex = models.SmallIntegerField(default=0, verbose_name='性别')
     certified_status = models.SmallIntegerField(default=0, verbose_name='认证状态')
     province = models.ForeignKey(Area, related_name='user_province', null=True, on_delete=models.SET_NULL, verbose_name='省')
@@ -155,14 +155,18 @@ class Demand(BaseModel):
     end_time = models.IntegerField(verbose_name='共享结束时间')
     expect_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='期望单价')
     price_unit = models.SmallIntegerField(verbose_name='年|月|天', choices=PRICE_UNIT_CHOICES)
-    province = models.ForeignKey(Area, related_name='demand_province', null=True, on_delete=models.SET_NULL, verbose_name='省')
-    city = models.ForeignKey(Area, related_name='demand_city', null=True, on_delete=models.SET_NULL, verbose_name='市')
-    district = models.ForeignKey(Area, related_name='demand_district', null=True, on_delete=models.SET_NULL, verbose_name='区')
+    province = models.ForeignKey(
+        Area, related_name='demand_province', null=True, on_delete=models.SET_NULL, verbose_name='省')
+    city = models.ForeignKey(
+        Area, related_name='demand_city', null=True, on_delete=models.SET_NULL, verbose_name='市')
+    district = models.ForeignKey(
+        Area, related_name='demand_district', null=True, on_delete=models.SET_NULL, verbose_name='区')
     address = models.CharField(max_length=200, verbose_name='详细地址')
     description = models.CharField(max_length=200, null=True, verbose_name='描述')
     lng = models.DecimalField(null=True, max_digits=22, decimal_places=15, verbose_name='经度')
     lat = models.DecimalField(null=True, max_digits=22, decimal_places=15, verbose_name='纬度')
     geotable_id = models.IntegerField(null=True, verbose_name='百度地图geotable_id')
+    poi_id = models.CharField(null=True, unique=True, max_length=128, verbose_name='百度地图poi_id')
 
     user = models.ForeignKey(User, db_column='uid', null=True, on_delete=models.SET_NULL, related_name='demands')
     category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL, related_name='demands')
@@ -185,11 +189,17 @@ class Share(BaseModel):
     end_time = models.IntegerField(verbose_name='共享结束时间')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='单价')
     price_unit = models.SmallIntegerField(verbose_name='年|月|天', choices=PRICE_UNIT_CHOICES)
-    province = models.ForeignKey(Area, related_name='share_province', null=True, on_delete=models.SET_NULL, verbose_name='省')
-    city = models.ForeignKey(Area, related_name='share_city', null=True, on_delete=models.SET_NULL, verbose_name='市')
-    district = models.ForeignKey(Area, related_name='share_district', null=True, on_delete=models.SET_NULL, verbose_name='区')
+    province = models.ForeignKey(
+        Area, related_name='share_province', null=True, on_delete=models.SET_NULL, verbose_name='省')
+    city = models.ForeignKey(
+        Area, related_name='share_city', null=True, on_delete=models.SET_NULL, verbose_name='市')
+    district = models.ForeignKey(
+        Area, related_name='share_district', null=True, on_delete=models.SET_NULL, verbose_name='区')
     address = models.CharField(max_length=200, verbose_name='详细地址')
+    deposit = models.DecimalField(verbose_name='押金', null=True, max_digits=10, decimal_places=2)
     description = models.CharField(max_length=200, null=True, verbose_name='描述')
+    geotable_id = models.IntegerField(null=True, verbose_name='百度地图geotable_id')
+    poi_id = models.CharField(null=True, unique=True, max_length=128, verbose_name='百度地图poi_id')
 
     user = models.ForeignKey(User, db_column='uid', null=True, on_delete=models.SET_NULL, related_name='shares')
     category = models.ForeignKey(
@@ -244,5 +254,76 @@ class IntegralLog(BaseModel):
         db_table = 'integral_log'
 
 
+class Order(BaseModel):
+    PAY_METHOD_CHOICES = (
+        (1, '微信'),
+        (2, '支付宝'),
+        (3, '银联'),
+        (4, '钱包'),
+    )
+    PAY_STATUS_CHOICES = (
+        (1, '待支付'),
+        (2, '已支付'),
+        (3, '支付失败'),
+    )
+
+    share = models.ForeignKey(Share, null=True, on_delete=models.SET_NULL, verbose_name='共享商品')
+    buyer = models.ForeignKey(User, db_column='buyer_id', on_delete=models.CASCADE, related_name='buyer_order')
+    seller = models.ForeignKey(User, db_column='seller_id', on_delete=models.CASCADE, related_name='seller_order')
+    order_no = models.CharField(max_length=128, verbose_name='订单号')
+    trade_no = models.CharField(max_length=128, verbose_name='交易号')
+    subject = models.CharField(max_length=128)
+    body = models.CharField(max_length=128)
+    pay_method = models.SmallIntegerField(verbose_name='支付方式', null=True, choices=PAY_METHOD_CHOICES)
+    payment_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='实际付款金额，用户实际需要付款的金额，包含了押金池抵扣金额')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='订单支付金额,不包含押金池抵扣金额')
+    pay_status = models.SmallIntegerField(verbose_name='支付状态', default=1, choices=PAY_STATUS_CHOICES)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, verbose_name='实际支付金额，支付回调后写入')
+    pay_at = models.BigIntegerField(verbose_name='支付时间时间戳', null=True)
+
+    class Meta:
+        db_table = 'order'
 
 
+class OrderInfo(BaseModel):
+    STATUS_CHOICES = (
+        (1, '待付款'),
+        (2, '待发货'),
+        (3, '已发货'),
+        (4, '待买家评价'),
+        (5, '待卖家评价'),
+        (6, '已关闭'),
+        (7, '双方已评价'),
+        (8, '待归还'),
+        (9, '归还中'),
+    )
+    TRADE_METHOD_CHOICES = (
+        (1, '买家自提'),
+    )
+    RENT_UNIT_CHOICES = (
+        (1, '年'),
+        (2, '月'),
+        (3, '天'),
+    )
+    IS_USE_POOL_CHOICES = (
+        (1, '使用押金池'),
+        (2, '不使用押金池')
+    )
+    order = models.OneToOneField(Order, null=True, on_delete=models.SET_NULL, verbose_name='订单')
+    number = models.IntegerField(verbose_name='数量', default=1)
+    message = models.CharField(max_length=256, null=True, verbose_name='买家留言')
+    status = models.SmallIntegerField(verbose_name='订单状态', default=1, choices=STATUS_CHOICES)
+    trade_method = models.SmallIntegerField(verbose_name='交易方式', choices=TRADE_METHOD_CHOICES)
+    rent = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='租金')
+    # rent_unit = models.SmallIntegerField(verbose_name='租金时间单位', choices=RENT_UNIT_CHOICES)
+    deposit = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='押金')
+    is_use_pool = models.BooleanField(verbose_name='是否使用押金池', default=False, choices=IS_USE_POOL_CHOICES)
+    used_pool_deposit = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='押金池中所使用的押金', default=0)
+    start_at = models.BigIntegerField(null=True, verbose_name='开始时间')
+    end_at = models.BigIntegerField(null=True, verbose_name='结束时间')
+    delivery_at = models.BigIntegerField(null=True, verbose_name='发货时间')
+    receipt_at = models.BigIntegerField(null=True, verbose_name='收货时间')
+    return_at = models.BigIntegerField(null=True, verbose_name='归还时间')
+
+    class Meta:
+        db_table = 'order_info'

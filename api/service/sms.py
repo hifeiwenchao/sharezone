@@ -4,7 +4,7 @@ from aliyunsdkdysmsapi.request.v20170525 import QuerySendDetailsRequest
 from aliyunsdkcore.client import AcsClient
 import uuid
 from aliyunsdkcore.profile import region_provider
-from django.conf import settings
+# from django.conf import settings
 from api.const import SmsTemplateCode, SmsExpire
 import random
 from common import utils
@@ -15,7 +15,11 @@ REGION = "cn-hangzhou"
 PRODUCT_NAME = "Dysmsapi"
 DOMAIN = "dysmsapi.aliyuncs.com"
 
-acs_client = AcsClient(settings.SMS_ACCESS_KEY, settings.SMS_SECRET, REGION)
+ACCESS_KEY = utils.config('SMS', 'access_key')
+SECRET = utils.config('SMS', 'secret')
+SIGN_NAME = utils.config('SMS', 'sign_name')
+
+acs_client = AcsClient(ACCESS_KEY, SECRET, REGION)
 region_provider.add_endpoint(PRODUCT_NAME, REGION, DOMAIN)
 
 
@@ -30,7 +34,7 @@ def send_sms(phone_numbers, template_code, template_param=None, business_id=None
     if business_id is not None:
         sms_request.set_OutId(business_id)
     # 短信签名
-    sms_request.set_SignName(settings.SMS_SIGN_NAME)
+    sms_request.set_SignName(SIGN_NAME)
     # 数据提交方式
     # smsRequest.set_method(MT.POST)
     # 数据提交格式
@@ -76,8 +80,3 @@ def send_find_pwd_code(phone):
     dao.identity_code.create(
         phone=phone, code=code, expire_at=now + SmsExpire.FIND_PWD, template_code=SmsTemplateCode.FIND_PWD)
     send_sms(phone, SmsTemplateCode.FIND_PWD, {'code': code})
-
-
-
-
-

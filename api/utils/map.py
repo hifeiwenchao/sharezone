@@ -155,7 +155,8 @@ def create_poi(table_id, latitude, longitude, data, title=None, address=None, ta
     :param address:
     :param tags:
     :param coord_type:
-    :return: 是否添加成功
+    :return:
+    :rtype: str poi_id
     """
     params = dict(
         geotable_id=table_id,
@@ -176,8 +177,9 @@ def create_poi(table_id, latitude, longitude, data, title=None, address=None, ta
     r = requests.post('http://api.map.baidu.com/geodata/v4/poi/create', data=params)
     if r.status_code == 200:
         response = r.json()
-        return response['status'] == 0
-    return False
+        print(response)
+        if response['status'] == 0:
+            return response['id']
 
 
 if __name__ == '__main__':

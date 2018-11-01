@@ -1,4 +1,5 @@
 from api.models import Demand
+from django.db.models import Count
 
 
 def create(**kwargs):
@@ -10,8 +11,8 @@ def get_demand(**kwargs):
 
 
 def get_demands(**kwargs):
-    return Demand.objects.filter(**kwargs)
+    return Demand.objects.filter(**kwargs).all()
 
 
-
-
+def demand_count(user):
+    return Demand.objects.all().annotate(demand_count=Count("user"))

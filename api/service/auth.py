@@ -53,7 +53,7 @@ def register(phone, password, code):
         password = make_password(password)
         user = dao.user.create_user(phone=phone, password=password)
         nickname = dao.user_info.gen_nickname()
-        dao.user_info.create_user_info(nickname=nickname, user=user)
+        dao.user_info.create(nickname=nickname, user=user)
 
         dao.deposit_pool.create(user=user)
         dao.asset.create(user=user)

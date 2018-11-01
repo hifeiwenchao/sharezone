@@ -13,8 +13,8 @@ connect = pymysql.connect(
 )
 
 cursor = connect.cursor()
-cursor.execute('DROP DATABASE IF EXISTS yiqibnb')
-cursor.execute('CREATE DATABASE yiqibnb DEFAULT CHARSET utf8 COLLATE utf8_general_ci')
+cursor.execute('DROP DATABASE IF EXISTS sharezone')
+cursor.execute('CREATE DATABASE sharezone DEFAULT CHARSET utf8 COLLATE utf8_general_ci')
 cursor.close()
 
 exit(0)

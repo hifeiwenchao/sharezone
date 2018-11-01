@@ -2,17 +2,18 @@
 from django.views import View
 from api.service import auth
 from common.utils.http import formatting
+from common import utils
 import json
 
 
 class Login(View):
     @formatting()
     def post(self, request):
-        print(request.body)
         body = json.loads(request.body)
         phone = body['phone']
         password = body['password']
         result = auth.login(phone, password)
+
         return {'token': result}
 
 

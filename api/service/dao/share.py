@@ -12,6 +12,3 @@ def get_share(**kwargs):
 def get_shares(**kwargs):
     return Share.objects.filter(**kwargs)
 
-
-
-

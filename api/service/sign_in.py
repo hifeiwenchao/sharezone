@@ -10,5 +10,5 @@ def sign_in(user):
     dao.sign_log.create(user=user)
     dao.integral_log.create(user=user, integral=const.SIGN_IN_INTEGRAL)
     dao.user_info.add_integral(user, const.SIGN_IN_INTEGRAL)
-
+    return const.SIGN_IN_INTEGRAL
 
