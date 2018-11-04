@@ -10,7 +10,6 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 
 def response_format(code=0, data=None, message=""):
-    print(type(data))
     if data is None:
         data = data
     elif isinstance(data, (str, int, float, list, dict, tuple)):
@@ -20,7 +19,6 @@ def response_format(code=0, data=None, message=""):
         data = json.loads(data)
     else:
         data = obj2dict(data)
-    print(data)
     response = {"message": message, "data": data, "code": code}
     response = json.dumps(response, ensure_ascii=False, indent=4)
     return HttpResponse(content=response, content_type='application/json')

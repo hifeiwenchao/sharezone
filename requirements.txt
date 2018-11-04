@@ -9,7 +9,7 @@ cryptography==2.3.1
 Django==2.1.1
 django-redis==4.9.0
 idna==2.7
-mns==1.1.4
+mns==1.0.2
 Pillow==5.3.0
 pyasn1==0.4.4
 pycparser==2.19
@@ -22,4 +22,5 @@ redis==2.10.6
 requests==2.19.1
 rsa==4.0
 six==1.11.0
+ujson==1.35
 urllib3==1.23

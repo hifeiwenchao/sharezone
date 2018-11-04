@@ -64,3 +64,22 @@ class OrderStatus:
     BOTH_COMMENT = 7
     WAIT_RETURN = 8
     RETURNNING = 9
+
+
+class PayMethod:
+    # 支付宝
+    ALI_PAY = 1
+    # 微信支付
+    WECHAT_PAY = 2
+    # 银联支付
+    UNION_PAY = 3
+
+
+class ShareStatus:
+    # 开启
+    OPEN = 1
+    # 关闭
+    CLOSED = -1
+
+
+

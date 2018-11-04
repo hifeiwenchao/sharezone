@@ -4,6 +4,7 @@ from common.utils.http import formatting
 from api.auth.decorator import auth
 import json
 from api import service
+from api.const import ShareStatus
 
 
 class Shares(View):
@@ -29,6 +30,18 @@ class Shares(View):
         """
         user = request.user
         shares = service.share.get_shares(user=user)
+        return shares
+
+
+class PublicShares(View):
+    @formatting()
+    def get(self, request):
+        """
+        所有用户已发布的共享
+        :param request:
+        :return:
+        """
+        shares = service.share.get_shares(status=ShareStatus.OPEN)
         return shares
 
 

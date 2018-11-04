@@ -172,4 +172,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'upload')
 ATOMIC_REQUESTS = True
 AUTOCOMMIT = False
 
+# token过期时间
 TOKEN_EXPIRE_TIME = 3600
+
+# 支付超时时间
+PAYMENT_EXPIRE_TIME = 1800

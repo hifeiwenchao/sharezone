@@ -3,6 +3,10 @@ from api.exceptions.defines import NotFoundException, TradeException
 from django.db import transaction
 from common.utils import generate_order_no
 import decimal
+from api.utils.alipay import AliPayProxy
+from api.const import PayMethod, OrderStatus
+import math
+from decimal import Decimal
 
 
 def cal_rent(share, number, start_at, end_at):
@@ -18,14 +22,14 @@ def cal_rent(share, number, start_at, end_at):
     duration = end_at - start_at
     if share.price_unit == 1:
         # 年
-        duration = duration / (60 * 60 * 24 * 365)
+        duration = duration / (1000 * 60 * 60 * 24 * 365)
     if share.price_unit == 2:
         # 月
-        duration = duration / (60 * 60 * 24 * 30)
+        duration = duration / (1000 * 60 * 60 * 24 * 30)
     if share.price_unit == 3:
         # 日
-        duration = duration / (60 * 60 * 24)
-    return share.price * decimal.Decimal(number * duration)
+        duration = duration / (1000 * 60 * 60 * 24)
+    return share.price * decimal.Decimal(number * math.ceil(duration))
 
 
 def gen_order(buyer, share_id, number, start_at, end_at, is_use_pool=True, message=None, trade_method=1):
@@ -62,7 +66,7 @@ def gen_order(buyer, share_id, number, start_at, end_at, is_use_pool=True, messa
             order_no=order_no,
             subject=share.title,
             body=share.title,
-            payment_price=rent + need_deposit - deposit_in_pool,
+            total_amount=rent + need_deposit - deposit_in_pool,
             price=rent + need_deposit,
         )
         dao.order.create_order_info(
@@ -80,3 +84,51 @@ def gen_order(buyer, share_id, number, start_at, end_at, is_use_pool=True, messa
         return order
 
 
+def app_pay(user, order_id, pay_method):
+    order = dao.order.get_order(id=order_id, buyer=user)
+    if not order:
+        raise NotFoundException('订单不存在')
+    if order.order_info.status != OrderStatus.WAIT_PAY:
+        raise TradeException('该订单状态不可支付')
+
+    if pay_method == PayMethod.ALI_PAY:
+        proxy = AliPayProxy()
+        return proxy.trade_app_pay(
+            out_trade_no=order.order_no,
+            total_amount=float(order.total_amount),
+            subject=order.subject,
+            body=order.body,
+        )
+    elif pay_method == PayMethod.WECHAT_PAY:
+        # todo
+        pass
+    elif pay_method == PayMethod.UNION_PAY:
+        # todo
+        pass
+    else:
+        raise TradeException('暂不支持此交易方式')
+
+
+def page_pay(user, order_id, pay_method):
+    order = dao.order.get_order(id=order_id, buyer=user)
+    if not order:
+        raise NotFoundException('订单不存在')
+    if order.order_info.status != OrderStatus.WAIT_PAY:
+        raise TradeException('该订单状态不可支付')
+
+    if pay_method == PayMethod.ALI_PAY:
+        proxy = AliPayProxy()
+        return proxy.trade_page_pay(
+            out_trade_no=order.order_no,
+            total_amount=float(order.total_amount),
+            subject=order.subject,
+            body=order.body,
+        )
+    elif pay_method == PayMethod.WECHAT_PAY:
+        # todo
+        pass
+    elif pay_method == PayMethod.UNION_PAY:
+        # todo
+        pass
+    else:
+        raise TradeException('暂不支持此交易方式')

@@ -16,3 +16,6 @@ def get_orders(**kwargs):
 def create_order_info(**kwargs):
     return OrderInfo.objects.create(**kwargs)
 
+
+def get_order_by_user(user, **kwargs):
+    return Order.objects.filter(buyer=user, **kwargs).first()

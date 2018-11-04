@@ -181,12 +181,16 @@ class Share(BaseModel):
         (2, '月'),
         (3, '天'),
     )
+    STATUS_CHOICES = (
+        (1, '开启'),
+        (-1, '关闭')
+    )
 
     title = models.CharField(max_length=128, verbose_name='共享标题')
     stock = models.IntegerField(verbose_name='共享库存')
     stock_unit = models.CharField(max_length=20, verbose_name='库存数量单位')
-    start_time = models.IntegerField(verbose_name='共享开始时间')
-    end_time = models.IntegerField(verbose_name='共享结束时间')
+    start_time = models.BigIntegerField(verbose_name='共享开始时间')
+    end_time = models.BigIntegerField(verbose_name='共享结束时间')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='单价')
     price_unit = models.SmallIntegerField(verbose_name='年|月|天', choices=PRICE_UNIT_CHOICES)
     province = models.ForeignKey(
@@ -198,6 +202,7 @@ class Share(BaseModel):
     address = models.CharField(max_length=200, verbose_name='详细地址')
     deposit = models.DecimalField(verbose_name='押金', null=True, max_digits=10, decimal_places=2)
     description = models.CharField(max_length=200, null=True, verbose_name='描述')
+    status = models.SmallIntegerField(default=1, verbose_name='状态', choices=STATUS_CHOICES)
     geotable_id = models.IntegerField(null=True, verbose_name='百度地图geotable_id')
     poi_id = models.CharField(null=True, unique=True, max_length=128, verbose_name='百度地图poi_id')
 
@@ -275,7 +280,8 @@ class Order(BaseModel):
     subject = models.CharField(max_length=128)
     body = models.CharField(max_length=128)
     pay_method = models.SmallIntegerField(verbose_name='支付方式', null=True, choices=PAY_METHOD_CHOICES)
-    payment_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='实际付款金额，用户实际需要付款的金额，包含了押金池抵扣金额')
+    payment_price = models.DecimalField(
+        max_digits=10, null=True, decimal_places=2, verbose_name='实际付款金额，用户实际需要付款的金额，包含了押金池抵扣金额')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='订单支付金额,不包含押金池抵扣金额')
     pay_status = models.SmallIntegerField(verbose_name='支付状态', default=1, choices=PAY_STATUS_CHOICES)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, verbose_name='实际支付金额，支付回调后写入')
@@ -309,7 +315,7 @@ class OrderInfo(BaseModel):
         (1, '使用押金池'),
         (2, '不使用押金池')
     )
-    order = models.OneToOneField(Order, null=True, on_delete=models.SET_NULL, verbose_name='订单')
+    order = models.OneToOneField(Order, null=True, related_name='order_info', on_delete=models.SET_NULL, verbose_name='订单')
     number = models.IntegerField(verbose_name='数量', default=1)
     message = models.CharField(max_length=256, null=True, verbose_name='买家留言')
     status = models.SmallIntegerField(verbose_name='订单状态', default=1, choices=STATUS_CHOICES)
