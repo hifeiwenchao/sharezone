@@ -3,7 +3,9 @@ from common.utils.http import formatting
 from api.auth.decorator import auth
 import ujson
 from api import service
+from api.jobs import close_order
 from api.utils.alipay import AliPayProxy
+from django.conf import settings
 
 
 import logging
@@ -29,7 +31,7 @@ class Orders(View):
         message = body.get('message')
         trade_method = body.get('trade_method', 1)
         order = service.trade.gen_order(user, share_id, number, start_at, end_at, is_use_pool, message, trade_method)
-
+        close_order.apply_async(args=(order.id,), countdown=settings.PAYMENT_EXPIRE_TIME, queue='default')
         return order.id
 
 

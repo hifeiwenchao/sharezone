@@ -19,3 +19,7 @@ def create_order_info(**kwargs):
 
 def get_order_by_user(user, **kwargs):
     return Order.objects.filter(buyer=user, **kwargs).first()
+
+
+def update_status(order_id, status):
+    return OrderInfo.objects.filter(order_id=order_id).update(status=status)

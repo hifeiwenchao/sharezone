@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import djcelery
+from celery.schedules import crontab
+from kombu import Queue
+
+djcelery.setup_loader()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -37,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djcelery',
     'api'
 ]
 
@@ -206,3 +212,15 @@ LOGGING = {
         },
     }
 }
+
+CELERY_RESULT_BACKEND = 'redis://:1qaz$RFV@localhost:6399/0'
+BROKER_URL = 'redis://:1qaz$RFV@localhost:6399/0'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_RESULT_EXPIRES = 60 * 60 * 24  # 任务过期时间
+CELERY_ACCEPT_CONTENT = ["json"]  # 指定任务接受的内容类型.
+CELERY_QUEUES = (
+    Queue('default'),
+    # Queue('web_tasks', routing_key='web.#'),
+)
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'

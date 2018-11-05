@@ -95,6 +95,18 @@ def gen_order(buyer, share_id, number, start_at, end_at, is_use_pool=True, messa
         return order
 
 
+def close_order(order_id):
+    """
+    关闭订单
+    :param order_id:
+    :return:
+    """
+    order = dao.order.get_order(id=order_id)
+    if order and order.order_info.status == OrderStatus.WAIT_PAY:
+        return dao.order.update_status(order_id, OrderStatus.CLOSED)
+    raise TradeException('当前无法关闭订单')
+
+
 def pay(user, order_id, pay_method, is_mobile=True):
     """
     发起第三方支付订单创建请求
