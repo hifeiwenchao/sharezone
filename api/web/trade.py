@@ -6,6 +6,10 @@ from api import service
 from api.utils.alipay import AliPayProxy
 
 
+import logging
+logger = logging.getLogger('api')
+
+
 class Orders(View):
     @formatting()
     @auth
@@ -42,10 +46,30 @@ class Pay(View):
         body = json.loads(request.body)
         order_id = body.get('order_id')
         pay_method = body.get('pay_method')
-        device = body.get('device')
-        if device == 'mobile':
-            # 移动端返回支付参数用于调起支付APP
-            return service.trade.app_pay(user, order_id, pay_method)
+        is_mobile = body.get('is_mobile', True)
+        return service.trade.pay(user, order_id, pay_method, is_mobile)
+
+
+class Notify(View):
+    @formatting()
+    def post(self, request, pay_method):
+        if pay_method == 'alipay':
+            logger.info(request.body)
+            logger.info('alipay')
+        elif pay_method == 'wechat':
+            logger.info(request.body)
+            logger.info('wechat')
         else:
-            # web端返回带参数的url
-            return service.trade.page_pay(user, order_id, pay_method)
+            logger.info(request.body)
+            logger.info('error...')
+
+    def get(self, request, pay_method):
+        if pay_method == 'alipay':
+            logger.info(request.body)
+            logger.info('alipay')
+        elif pay_method == 'wechat':
+            logger.info(request.body)
+            logger.info('wechat')
+        else:
+            logger.info(request.body)
+            logger.info('error...')

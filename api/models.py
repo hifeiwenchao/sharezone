@@ -200,7 +200,7 @@ class Share(BaseModel):
     district = models.ForeignKey(
         Area, related_name='share_district', null=True, on_delete=models.SET_NULL, verbose_name='区')
     address = models.CharField(max_length=200, verbose_name='详细地址')
-    deposit = models.DecimalField(verbose_name='押金', null=True, max_digits=10, decimal_places=2)
+    deposit = models.DecimalField(verbose_name='押金', default=0.00, max_digits=10, decimal_places=2)
     description = models.CharField(max_length=200, null=True, verbose_name='描述')
     status = models.SmallIntegerField(default=1, verbose_name='状态', choices=STATUS_CHOICES)
     geotable_id = models.IntegerField(null=True, verbose_name='百度地图geotable_id')

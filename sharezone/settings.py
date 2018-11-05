@@ -116,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -177,3 +177,32 @@ TOKEN_EXPIRE_TIME = 3600
 
 # 支付超时时间
 PAYMENT_EXPIRE_TIME = 1800
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s %(pathname)s line:%(lineno)s %(levelname)s: %(message)s'
+        },
+    },
+    'handlers': {
+        'api': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'sharezone.log',
+            'maxBytes': 1024 * 1024 * 10,
+            'encoding': 'utf8',
+            'backupCount': 1,
+            'formatter': 'verbose',
+            'delay': True,
+        },
+    },
+    'loggers': {
+        'api': {
+            'handlers': ['api'],
+            'level': 'DEBUG',  # DEBUG,INFO,WARNING,ERROR,CRITICAL
+            'propagate': True,
+        },
+    }
+}

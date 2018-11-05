@@ -31,6 +31,7 @@ logger = logging.getLogger('')
 _APP_ID = utils.config('AliPay', 'app_id')
 _PRIVATE_KEY = utils.config('AliPay', 'app_private_key')
 _PUBLIC_KEY = utils.config('AliPay', 'public_key')
+_NOTIFY_URL = utils.config('AliPay', 'notify_url')
 
 
 class AliPayProxy(object):
@@ -75,6 +76,7 @@ class AliPayProxy(object):
         model.subject = kwargs.get('subject')
         model.out_trade_no = kwargs.get('out_trade_no')
         request = AlipayTradeAppPayRequest(biz_model=model)
+        request.notify_url = _NOTIFY_URL
         response = self.client.sdk_execute(request)
         return response
 
@@ -87,6 +89,7 @@ class AliPayProxy(object):
         model.body = kwargs.get('body')
         model.product_code = "FAST_INSTANT_TRADE_PAY"
         request = AlipayTradePagePayRequest(biz_model=model)
+        request.notify_url = _NOTIFY_URL
         # 得到构造的请求，如果http_method是GET，则是一个带完成请求参数的url，如果http_method是POST，则是一段HTML表单片段
         response = self.client.page_execute(request, http_method="GET")
         return response

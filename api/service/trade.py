@@ -6,7 +6,6 @@ import decimal
 from api.utils.alipay import AliPayProxy
 from api.const import PayMethod, OrderStatus
 import math
-from decimal import Decimal
 
 
 def cal_rent(share, number, start_at, end_at):
@@ -33,6 +32,18 @@ def cal_rent(share, number, start_at, end_at):
 
 
 def gen_order(buyer, share_id, number, start_at, end_at, is_use_pool=True, message=None, trade_method=1):
+    """
+    提交订单
+    :param buyer:
+    :param share_id:
+    :param number:
+    :param start_at:
+    :param end_at:
+    :param is_use_pool:
+    :param message:
+    :param trade_method:
+    :return:
+    """
     share = dao.share.get_share(id=share_id)
     if not share:
         raise NotFoundException('共享商品不存在')
@@ -84,7 +95,15 @@ def gen_order(buyer, share_id, number, start_at, end_at, is_use_pool=True, messa
         return order
 
 
-def app_pay(user, order_id, pay_method):
+def pay(user, order_id, pay_method, is_mobile=True):
+    """
+    发起第三方支付订单创建请求
+    :param user:
+    :param order_id:
+    :param pay_method:
+    :param is_mobile:
+    :return:
+    """
     order = dao.order.get_order(id=order_id, buyer=user)
     if not order:
         raise NotFoundException('订单不存在')
@@ -93,37 +112,20 @@ def app_pay(user, order_id, pay_method):
 
     if pay_method == PayMethod.ALI_PAY:
         proxy = AliPayProxy()
-        return proxy.trade_app_pay(
-            out_trade_no=order.order_no,
-            total_amount=float(order.total_amount),
-            subject=order.subject,
-            body=order.body,
-        )
-    elif pay_method == PayMethod.WECHAT_PAY:
-        # todo
-        pass
-    elif pay_method == PayMethod.UNION_PAY:
-        # todo
-        pass
-    else:
-        raise TradeException('暂不支持此交易方式')
-
-
-def page_pay(user, order_id, pay_method):
-    order = dao.order.get_order(id=order_id, buyer=user)
-    if not order:
-        raise NotFoundException('订单不存在')
-    if order.order_info.status != OrderStatus.WAIT_PAY:
-        raise TradeException('该订单状态不可支付')
-
-    if pay_method == PayMethod.ALI_PAY:
-        proxy = AliPayProxy()
-        return proxy.trade_page_pay(
-            out_trade_no=order.order_no,
-            total_amount=float(order.total_amount),
-            subject=order.subject,
-            body=order.body,
-        )
+        if is_mobile:
+            return proxy.trade_app_pay(
+                out_trade_no=order.order_no,
+                total_amount=float(order.total_amount),
+                subject=order.subject,
+                body=order.body,
+            )
+        else:
+            return proxy.trade_page_pay(
+                out_trade_no=order.order_no,
+                total_amount=float(order.total_amount),
+                subject=order.subject,
+                body=order.body,
+            )
     elif pay_method == PayMethod.WECHAT_PAY:
         # todo
         pass

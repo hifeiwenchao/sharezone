@@ -7,7 +7,7 @@ def make_token(uid):
     token = utils.encrypt({'uid': uid})
     expire_time = settings.TOKEN_EXPIRE_TIME
     if settings.DEBUG:
-        expire_time = 3600 * 10
+        expire_time = 3600 * 24 * 10
 
     cache.set('uid' + str(uid), token, expire_time)
     return token
