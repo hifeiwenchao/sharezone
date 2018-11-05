@@ -1,7 +1,7 @@
 from django.views import View
 from common.utils.http import formatting
 from api.auth.decorator import auth
-import json
+import ujson
 from api import service
 from api.utils.alipay import AliPayProxy
 
@@ -20,7 +20,7 @@ class Orders(View):
         :return:
         """
         user = request.user
-        body = json.loads(request.body)
+        body = ujson.loads(request.body)
         share_id = body.get('share_id')
         number = body.get('number')
         start_at = body.get('start_at')
@@ -43,7 +43,7 @@ class Pay(View):
         :return:
         """
         user = request.user
-        body = json.loads(request.body)
+        body = ujson.loads(request.body)
         order_id = body.get('order_id')
         pay_method = body.get('pay_method')
         is_mobile = body.get('is_mobile', True)

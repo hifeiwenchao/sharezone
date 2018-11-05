@@ -1,14 +1,21 @@
 alipay-sdk-python==3.1.81
 aliyun-python-sdk-core-v3==2.9.4
 aliyun-python-sdk-dysmsapi==1.0.0
+amqp==1.4.9
+anyjson==0.3.3
 asn1crypto==0.24.0
+billiard==3.3.0.23
+celery==3.1.26.post2
 certifi==2018.8.24
 cffi==1.11.5
 chardet==3.0.4
 cryptography==2.3.1
 Django==2.1.1
+django-celery==3.2.2
 django-redis==4.9.0
+djangorestframework==3.9.0
 idna==2.7
+kombu==3.0.37
 mns==1.0.2
 Pillow==5.3.0
 pyasn1==0.4.4
@@ -24,3 +31,4 @@ rsa==4.0
 six==1.11.0
 ujson==1.35
 urllib3==1.23
+vine==1.1.4

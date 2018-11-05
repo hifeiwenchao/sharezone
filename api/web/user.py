@@ -2,7 +2,7 @@ from api import service
 from django.views import View
 from common.utils.http import formatting
 from api.auth.decorator import auth
-import json
+import ujson
 from django.db import transaction
 
 
@@ -39,7 +39,7 @@ class Profile(View):
         :return:
         """
         user = request.user
-        body = json.loads(request.body)
+        body = ujson.loads(request.body)
         service.user.update_profile(user, **body)
 
 

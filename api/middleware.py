@@ -1,7 +1,5 @@
 from django.utils.deprecation import MiddlewareMixin
-from django.http.response import HttpResponse
 from api.exceptions.defines import ApiBaseException
-import json
 from common.utils.http import response_format
 import traceback
 import logging

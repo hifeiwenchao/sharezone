@@ -1,8 +1,7 @@
 import functools
 from django.http import HttpResponse
-import json
+import ujson
 from common.utils import obj2dict
-from api.exceptions.defines import ApiBaseException
 from django.contrib.auth import authenticate
 from django.core.serializers import serialize
 from django.db.models.query import QuerySet
@@ -16,11 +15,11 @@ def response_format(code=0, data=None, message=""):
         data = data
     elif isinstance(data, QuerySet):
         data = serialize('json', data, cls=DjangoJSONEncoder)
-        data = json.loads(data)
+        data = ujson.loads(data)
     else:
         data = obj2dict(data)
     response = {"message": message, "data": data, "code": code}
-    response = json.dumps(response, ensure_ascii=False, indent=4)
+    response = ujson.dumps(response, ensure_ascii=False, indent=4)
     return HttpResponse(content=response, content_type='application/json')
 
 

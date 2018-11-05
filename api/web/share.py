@@ -2,7 +2,7 @@
 from django.views import View
 from common.utils.http import formatting
 from api.auth.decorator import auth
-import json
+import ujson
 from api import service
 from api.const import ShareStatus
 
@@ -16,7 +16,7 @@ class Shares(View):
         :param request:
         :return:
         """
-        body = json.loads(request.body)
+        body = ujson.loads(request.body)
         share = service.share.publish(request.user, **body)
         return share.id
 

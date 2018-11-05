@@ -1,7 +1,7 @@
 from django.views import View
 from common.utils.http import formatting
 from api.auth.decorator import auth
-import json
+import ujson
 from api import service
 
 
@@ -14,7 +14,7 @@ class Demands(View):
         :param request:
         :return:
         """
-        body = json.loads(request.body)
+        body = ujson.loads(request.body)
         demand = service.demand.publish(request.user, **body)
         return demand
 
