@@ -1,8 +1,8 @@
 import requests
-import json
+from common.utils import config
 
 
-AK = 'rvKKOvd4oDS7gSooa8I9yUPqfN48zzdO'
+AK = config('LBS', 'ak')
 
 
 def geocoder(address, city=None, output='json'):
@@ -177,7 +177,6 @@ def create_poi(table_id, latitude, longitude, data, title=None, address=None, ta
     r = requests.post('http://api.map.baidu.com/geodata/v4/poi/create', data=params)
     if r.status_code == 200:
         response = r.json()
-        print(response)
         if response['status'] == 0:
             return response['id']
 
@@ -191,5 +190,5 @@ if __name__ == '__main__':
     # print(get_geotable_detail(1000004771))
     # print(delete_geotable(1000004771))
     # print(create_column(1000004770, 'aoo', 'boo', 1))
-    print(create_poi(1000004770, 31.240164588847, 121.51443399317, {'boo': 666}, address='松江区吧'))
+    print(create_poi(1000004885, 31.240164588847, 121.51443399317, {'boo': 666}, address='松江区吧'))
 
