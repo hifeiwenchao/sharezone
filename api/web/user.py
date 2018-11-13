@@ -4,9 +4,16 @@ from common.utils.http import formatting
 from api.auth.decorator import auth
 import ujson
 from django.db import transaction
+from rest_framework.views import APIView
+from api.core.serializers import UserSerializer
+from api.forms import user_form
+from api.exceptions.defines import ArgumentsInvalidException
+from common.utils.http import response_format
+from rest_framework.response import Response
+from api.views import BaseView
 
 
-class SignIn(View):
+class SignIn(BaseView):
     @formatting()
     @auth
     def post(self, request):
@@ -18,7 +25,9 @@ class SignIn(View):
         return service.sign_in.sign_in(request.user)
 
 
-class Profile(View):
+class Profile(BaseView):
+    forms_classes = (user_form.GetProfileForm,)
+
     @formatting()
     def get(self, request):
         """
@@ -26,9 +35,11 @@ class Profile(View):
         :param request:
         :return:
         """
-        uid = request.GET.get('uid')
-        profile = service.user.get_profile(uid)
-        return profile
+        print('get is running...')
+        params = request.query_params
+        uid = params.get('uid')
+        user = service.user.get_profile(uid)
+        return UserSerializer(user).data
 
     @formatting()
     @auth
@@ -39,11 +50,11 @@ class Profile(View):
         :return:
         """
         user = request.user
-        body = ujson.loads(request.body)
-        service.user.update_profile(user, **body)
+        data = request.data
+        service.user.update_profile(user, **data)
 
 
-class Avatar(View):
+class Avatar(BaseView):
     @formatting()
     @auth
     def post(self, request):

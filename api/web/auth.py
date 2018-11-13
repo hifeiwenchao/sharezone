@@ -9,49 +9,51 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from api.core.serializers import UserSerializer
+from api.views import BaseView
+from api.forms.auth_form import PostLoginForm
 
 
-class Login(APIView):
+class Login(BaseView):
+    forms_classes = (PostLoginForm,)
+
     @formatting()
     def post(self, request):
-        body = ujson.loads(request.body)
-        phone = body['phone']
-        password = body['password']
+        data = request.data
+        phone = data['phone']
+        password = data['password']
         result = auth.login(phone, password)
-
         return {'token': result}
 
 
-class SmsLogin(APIView):
+class SmsLogin(BaseView):
     @formatting()
     def post(self, request):
-        print(request.body)
-        body = ujson.loads(request.body)
-        phone = body['phone']
-        code = body['code']
+        data = request.data
+        phone = data['phone']
+        code = data['code']
         result = auth.sms_login(phone, code)
         return {'token': result}
 
 
-class Register(APIView):
+class Register(BaseView):
     @formatting()
     def post(self, request):
-        body = ujson.loads(request.body)
-        phone = body.get('phone')
-        code = body.get('code')
-        password = body.get('password')
+        data = request.data
+        phone = data.get('phone')
+        code = data.get('code')
+        password = data.get('password')
 
         user = auth.register(phone, password, code)
         return UserSerializer(user).data
 
 
-class UpdatePassword(APIView):
+class UpdatePassword(BaseView):
     @formatting()
     def post(self, request):
-        body = ujson.loads(request.body)
-        phone = body.get('phone')
-        code = body.get('code')
-        password = body.get('password')
+        data = request.data
+        phone = data.get('phone')
+        code = data.get('code')
+        password = data.get('password')
         auth.find_password(phone, code, password)
 
 

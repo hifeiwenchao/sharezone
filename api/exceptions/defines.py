@@ -42,3 +42,9 @@ class TradeException(ApiBaseException):
     def __init__(self, message='交易失败', code=300):
         self.code = code
         self.message = message
+
+
+class ArgumentsInvalidException(ApiBaseException):
+    def __init__(self, message='参数错误', code=300):
+        self.code = code
+        self.message = message

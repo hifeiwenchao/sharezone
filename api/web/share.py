@@ -8,9 +8,10 @@ from api.const import ShareStatus
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from api.core.serializers import ShareSerializer
+from api.views import BaseView
 
 
-class Shares(APIView):
+class Shares(BaseView):
     @formatting()
     @auth
     def post(self, request):
@@ -19,8 +20,8 @@ class Shares(APIView):
         :param request:
         :return:
         """
-        body = ujson.loads(request.body)
-        share = service.share.publish(request.user, **body)
+        data = request.data
+        share = service.share.publish(request.user, **data)
         return ShareSerializer(share).data
 
     @formatting()
@@ -36,7 +37,7 @@ class Shares(APIView):
         return [ShareSerializer(share).data for share in shares]
 
 
-class PublicShares(APIView):
+class PublicShares(BaseView):
 
     @formatting()
     def get(self, request):
@@ -49,7 +50,7 @@ class PublicShares(APIView):
         return [ShareSerializer(share).data for share in shares]
 
 
-class Share(View):
+class Share(BaseView):
     @formatting()
     def get(self, request, share_id):
         """

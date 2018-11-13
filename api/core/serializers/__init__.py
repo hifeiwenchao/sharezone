@@ -2,16 +2,19 @@ from rest_framework import serializers
 from api.models import User, UserInfo, Share, Category, Demand, DepositPool, OrderInfo, Order
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'phone', 'email', 'is_email_verified', 'robot', 'status', 'created_at')
-
-
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserInfo
-        fields = '__all__'
+        fields = ('name', 'avatar', 'sex', 'certified_status', 'address', 'privacy_setting', 'integral', 'signature',
+                  'province', 'city', 'district')
+
+
+class UserSerializer(serializers.ModelSerializer):
+    user_info = UserInfoSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'user_info', 'username', 'phone', 'email', 'is_email_verified', 'robot', 'status', 'created_at')
 
 
 class ShareSerializer(serializers.ModelSerializer):
@@ -37,6 +40,3 @@ class DemandSerializer(serializers.ModelSerializer):
         model = Demand
         fields = '__all__'
         # exclude = ('geotable_id',)
-
-
-
