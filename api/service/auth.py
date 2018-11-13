@@ -35,6 +35,7 @@ def sms_login(phone, code):
     user = authenticate(phone=phone, code=code)
     if user:
         return make_token(user.id)
+    raise InvalidCodeException()
 
 
 def register(phone, password, code):
@@ -68,8 +69,8 @@ def find_password(phone, code, password):
         if not dao.user.exists(phone=phone):
             raise NotFoundException('账号不存在')
         dao.user.update(password=make_password(password), updated_at=utils.current_timestamp())
-
-
+    else:
+        raise InvalidCodeException()
 
 
 
