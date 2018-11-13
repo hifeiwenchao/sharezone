@@ -1,12 +1,14 @@
 from django.views import View
+from rest_framework.views import APIView
 from common.utils.http import formatting
 from api.auth.decorator import auth
 import ujson
 from api import service
 from api.core.serializers import DemandSerializer
+from api.views import BaseView
 
 
-class Demands(View):
+class Demands(BaseView):
     @formatting()
     @auth
     def post(self, request):
@@ -15,8 +17,8 @@ class Demands(View):
         :param request:
         :return:
         """
-        body = ujson.loads(request.body)
-        demand = service.demand.publish(request.user, **body)
+        data = request.data
+        demand = service.demand.publish(request.user, **data)
         return DemandSerializer(demand).data
 
     @formatting()

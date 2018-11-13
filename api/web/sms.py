@@ -2,36 +2,38 @@
 from django.views import View
 from api.service import auth, sms
 from common.utils.http import formatting
+from rest_framework.views import APIView
+from api.views import BaseView
 import ujson
 
 
-class SendRegisterSms(View):
+class SendRegisterSms(BaseView):
     @formatting()
     def post(self, request):
-        body = ujson.loads(request.body)
-        phone = body['phone']
+        data = request.data
+        phone = data['phone']
         sms.send_register_code(phone)
 
 
-class SendLoginSms(View):
+class SendLoginSms(BaseView):
     @formatting()
     def post(self, request):
-        body = ujson.loads(request.body)
-        phone = body['phone']
+        data = request.data
+        phone = data['phone']
         sms.send_login_code(phone)
 
 
-class SendFindPwdSms(View):
+class SendFindPwdSms(BaseView):
     @formatting()
     def post(self, request):
-        body = ujson.loads(request.body)
-        phone = body['phone']
+        data = request.data
+        phone = data['phone']
         sms.send_find_pwd_code(phone)
 
 
-class SendResetPwdSms(View):
+class SendResetPwdSms(BaseView):
     @formatting()
     def post(self, request):
-        body = ujson.loads(request.body)
-        phone = body['phone']
+        data = request.data
+        phone = data['phone']
         sms.send_reset_pwd_code(phone)

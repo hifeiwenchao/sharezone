@@ -9,7 +9,7 @@ def _format(user):
         result = dict(
             id=user.id,
             phone=user.phone,
-            nickname=user_info.nickname,
+            username=user.username,
             email=user.email,
             sex=user_info.sex,
             integral=user_info.integral,
@@ -21,6 +21,8 @@ def _format(user):
 
 def get_profile(uid):
     user = dao.user.get_user(id=uid)
+    return user
+
     return _format(user)
 
 
