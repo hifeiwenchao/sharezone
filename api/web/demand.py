@@ -3,6 +3,7 @@ from common.utils.http import formatting
 from api.auth.decorator import auth
 import ujson
 from api import service
+from api.core.serializers import DemandSerializer
 
 
 class Demands(View):
@@ -16,7 +17,7 @@ class Demands(View):
         """
         body = ujson.loads(request.body)
         demand = service.demand.publish(request.user, **body)
-        return demand
+        return DemandSerializer(demand).data
 
     @formatting()
     @auth
@@ -28,4 +29,4 @@ class Demands(View):
         """
         user = request.user
         demands = service.demand.get_demands(user=user)
-        return demands
+        return [DemandSerializer(demand).data for demand in demands]

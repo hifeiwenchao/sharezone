@@ -5,9 +5,12 @@ from api.auth.decorator import auth
 import ujson
 from api import service
 from api.const import ShareStatus
+from rest_framework.views import APIView
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from api.core.serializers import ShareSerializer
 
 
-class Shares(View):
+class Shares(APIView):
     @formatting()
     @auth
     def post(self, request):
@@ -18,7 +21,7 @@ class Shares(View):
         """
         body = ujson.loads(request.body)
         share = service.share.publish(request.user, **body)
-        return share.id
+        return ShareSerializer(share).data
 
     @formatting()
     @auth
@@ -30,10 +33,11 @@ class Shares(View):
         """
         user = request.user
         shares = service.share.get_shares(user=user)
-        return shares
+        return [ShareSerializer(share).data for share in shares]
 
 
-class PublicShares(View):
+class PublicShares(APIView):
+
     @formatting()
     def get(self, request):
         """
@@ -42,7 +46,7 @@ class PublicShares(View):
         :return:
         """
         shares = service.share.get_shares(status=ShareStatus.OPEN)
-        return shares
+        return [ShareSerializer(share).data for share in shares]
 
 
 class Share(View):
@@ -55,4 +59,4 @@ class Share(View):
         :return:
         """
         share = service.share.get_share(id=share_id)
-        return share
+        return ShareSerializer(share).data

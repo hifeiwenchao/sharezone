@@ -27,9 +27,9 @@ class SmsCodeBackend(object):
             user = dao.user.get_user(phone=phone)
         else:
             # 第一次登录，生成用户相关信息
-            user = dao.user.create_user(phone=phone)
-            nickname = dao.user_info.gen_nickname()
-            dao.user_info.create(nickname=nickname, user=user)
+            username = dao.user_info.gen_username()
+            user = dao.user.create_user(username=username, phone=phone)
+            dao.user_info.create(user=user)
             dao.deposit_pool.create(user=user)
             dao.asset.create(user=user)
         return user

@@ -51,9 +51,9 @@ def register(phone, password, code):
             raise ExistedException('用户已存在')
 
         password = make_password(password)
-        user = dao.user.create_user(phone=phone, password=password)
-        nickname = dao.user_info.gen_nickname()
-        dao.user_info.create(nickname=nickname, user=user)
+        username = dao.user_info.gen_username()
+        user = dao.user.create_user(username=username, phone=phone, password=password)
+        dao.user_info.create(user=user)
 
         dao.deposit_pool.create(user=user)
         dao.asset.create(user=user)
