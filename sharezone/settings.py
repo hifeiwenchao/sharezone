@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'djcelery',
-    'api'
+    'api',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -162,6 +163,7 @@ SESSION_SAVE_EVERY_REQUEST = False  # 是否每次请求都保存Session，默�
 
 AUTH_USER_MODEL = 'api.User'
 AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
     'api.auth.backends.TokenBackend',
     'api.auth.backends.PasswordBackend',
     'api.auth.backends.SmsCodeBackend',
@@ -224,3 +226,11 @@ CELERY_QUEUES = (
     # Queue('web_tasks', routing_key='web.#'),
 )
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    )
+}
+

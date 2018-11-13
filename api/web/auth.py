@@ -1,12 +1,17 @@
 
-from django.views import View
+from rest_framework.views import APIView
 from api.service import auth
 from common.utils.http import formatting
 from common import utils
 import ujson
+from rest_framework.response import Response
+from rest_framework.generics import GenericAPIView
+from rest_framework.views import APIView
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from api.core.serializers import UserSerializer
 
 
-class Login(View):
+class Login(APIView):
     @formatting()
     def post(self, request):
         body = ujson.loads(request.body)
@@ -17,7 +22,7 @@ class Login(View):
         return {'token': result}
 
 
-class SmsLogin(View):
+class SmsLogin(APIView):
     @formatting()
     def post(self, request):
         print(request.body)
@@ -28,7 +33,7 @@ class SmsLogin(View):
         return {'token': result}
 
 
-class Register(View):
+class Register(APIView):
     @formatting()
     def post(self, request):
         body = ujson.loads(request.body)
@@ -36,10 +41,11 @@ class Register(View):
         code = body.get('code')
         password = body.get('password')
 
-        return auth.register(phone, password, code)
+        user = auth.register(phone, password, code)
+        return UserSerializer(user).data
 
 
-class UpdatePassword(View):
+class UpdatePassword(APIView):
     @formatting()
     def post(self, request):
         body = ujson.loads(request.body)

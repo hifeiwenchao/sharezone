@@ -30,9 +30,9 @@ class Area(BaseModel):
         db_table = 'area'
 
 
-class User(AbstractUser):
+class User(AbstractUser, BaseModel):
 
-    account = models.CharField(max_length=50, unique=True, null=True, verbose_name='账号')
+    # account = models.CharField(max_length=50, unique=True, null=True, verbose_name='账号')
     phone = models.CharField(max_length=20, unique=True, null=True, verbose_name='手机号')
     password = models.CharField(max_length=128, null=True, verbose_name='密码')
     email = models.CharField(max_length=100, null=True, verbose_name='邮箱')
@@ -42,37 +42,16 @@ class User(AbstractUser):
     robot = models.SmallIntegerField(default=0, verbose_name='是否为机器人')
 
     def __str__(self):
-        return '<User {phone}>'.format(**dict(phone=self.phone))
+        return self.phone
 
     class Meta:
         db_table = 'user'
 
 
-class Enterprise(BaseModel):
-
-    name = models.CharField(max_length=200, verbose_name='企业名称')
-    trade_type = models.IntegerField(verbose_name='行业类别')
-    province = models.IntegerField(null=True, verbose_name='省')
-    city = models.IntegerField(null=True, verbose_name='市')
-    area = models.IntegerField(null=True, verbose_name='区')
-    legal_person = models.CharField(max_length=50, verbose_name='法人代表')
-    license_num = models.CharField(max_length=50, verbose_name='营业执照编号')
-    bank_public_num = models.CharField(max_length=100, verbose_name='对公银行账号')
-    bank = models.CharField(max_length=100, verbose_name='开户银行')
-    bank_address = models.CharField(max_length=100, verbose_name='开户银行所在地')
-    bank_branch_name = models.CharField(max_length=100, verbose_name='开户银行支行名称')
-
-    def __str__(self):
-        return '<Enterprise {name}>'.format(**dict(name=self.name))
-
-    class Meta:
-        db_table = 'enterprise'
-
-
 class UserInfo(BaseModel):
 
     name = models.CharField(max_length=50, null=True, verbose_name='真实姓名')
-    nickname = models.CharField(max_length=100, unique=True, verbose_name='昵称')
+    # nickname = models.CharField(max_length=100, unique=True, verbose_name='昵称')
     avatar = models.ImageField(upload_to='avatar', null=True, verbose_name='头像')
     sex = models.SmallIntegerField(default=0, verbose_name='性别')
     certified_status = models.SmallIntegerField(default=0, verbose_name='认证状态')
@@ -87,11 +66,10 @@ class UserInfo(BaseModel):
     signature = models.CharField(max_length=200, null=True, verbose_name='签名')
     background_image = models.CharField(max_length=300, null=True, verbose_name='背景图')
 
-    enterprise = models.ForeignKey(Enterprise, null=True, on_delete=models.SET_NULL, verbose_name='所属企业')
     user = models.OneToOneField(User, null=True, db_column='uid', on_delete=models.SET_NULL, related_name='user_info')
 
     def __str__(self):
-        return '<UserInfo {nickname}>'.format(**dict(nickname=self.nickname))
+        return self.user.username
 
     class Meta:
         db_table = 'user_info'

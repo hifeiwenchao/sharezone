@@ -5,7 +5,7 @@ import random
 from django.db.models import F
 
 
-def gen_nickname():
+def gen_username():
     return 'yiqi' + str(utils.current_timestamp())[-11:] + str(random.randint(100000, 1000000))
 
 
