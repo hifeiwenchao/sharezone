@@ -88,10 +88,10 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sharezone',
         # localhost会使用socket文件或者pipe，使用127.0.0.1会使用tcp连接
-        'HOST': '127.0.0.1',
-        'PORT': 3310,
-        'USER': 'sharezone',
-        'PASSWORD': '1qaz#EDC',
+        'HOST': 'mysql',
+        'PORT': 3306,
+        'USER': 'dev',
+        'PASSWORD': '123456',
         'TEST': {
             'CHARSET': 'utf8',
             'COLLATION': 'utf8_general_ci'
