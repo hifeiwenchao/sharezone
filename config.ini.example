@@ -1,16 +1,18 @@
 
 [AliPay]
-app_id=YOUR_APP_ID
-app_private_key=YOUR_APP_PRIVATE_KEY
-public_key=YOUR_PUBLIC_KEY
+app_id=APP_ID
+app_private_key=APP_PRIVATE_KEY
+public_key=PUBLIC_KEY
+notify_url=http://www.example.com/api/trade/notify/alipay
+return_url=http://www.example.com/api/trade/notify/alipay
 
 [LBS]
-ak=YOUR_AK
+ak=AK
 
 [SMS]
-access_key=YOUR_ACCESS_KEY
-secret=YOUR_SECRET
-sign_name=YOUR_SIGN_NAME
+access_key=ACCESS_KEY
+secret=SECRET
+sign_name=SIGN_NAME
 
 
 
