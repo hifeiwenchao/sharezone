@@ -24,17 +24,17 @@ services:
     ports:
       - "3311:3306"
     volumes:
-      - /Users/feiwenchao/project/sharezone/setup/mysql/data:/var/lib/mysql
-      - /Users/feiwenchao/project/sharezone/setup/mysql/conf/my.cnf:/etc/my.cnf
-      - /Users/feiwenchao/project/sharezone/setup/mysql/log:/var/log/mysql
+      - ./setup/mysql/data:/var/lib/mysql
+      - ./setup/mysql/conf/my.cnf:/etc/my.cnf
+      - ./setup/mysql/log:/var/log/mysql
 
   cache:
     image: "redis:4.0"
     ports:
       - "6399:6379"
     volumes:
-      - /Users/feiwenchao/project/sharezone/setup/redis/conf/redis.conf:/etc/redis/redis.conf
-      - /Users/feiwenchao/project/sharezone/setup/redis/data:/data
+      - ./setup/redis/conf/redis.conf:/etc/redis/redis.conf
+      - ./setup/redis/data:/data
 
 #volumes:
 #  db_data:
