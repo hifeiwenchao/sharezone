@@ -88,7 +88,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sharezone',
         # localhost会使用socket文件或者pipe，使用127.0.0.1会使用tcp连接
-        'HOST': 'mysql',
+        'HOST': 'db',
         'PORT': 3306,
         'USER': 'dev',
         'PASSWORD': '123456',
@@ -141,7 +141,7 @@ STATIC_URL = '/static/'
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6399",
+        "LOCATION": "redis://cache:6399",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "CONNECTION_POOL_KWARGS": {"max_connections": 100},
@@ -216,8 +216,8 @@ LOGGING = {
     }
 }
 
-CELERY_RESULT_BACKEND = 'redis://:1qaz$RFV@localhost:6399/0'
-BROKER_URL = 'redis://:1qaz$RFV@localhost:6399/0'
+CELERY_RESULT_BACKEND = 'redis://:1qaz$RFV@cache:6379/0'
+BROKER_URL = 'redis://:1qaz$RFV@cache:6379/0'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_RESULT_EXPIRES = 60 * 60 * 24  # 任务过期时间

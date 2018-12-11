@@ -1,0 +1,38 @@
+version: '2.4'
+services:
+
+  web:
+    build: .
+    ports:
+     - "80:80"
+     - "8000:8000"
+    links:
+      - db
+      - cache
+    depends_on:
+      - db
+      - cache
+    volumes:
+      - .:/opt/sharezone
+
+  db:
+    image: "mysql:5.7"
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_USER=dev
+      - MYSQL_PASSWORD=123456
+    ports:
+      - "3311:3306"
+    volumes:
+      - ~/setup/mysql/data:/var/lib/mysql
+      - ~/setup/mysql/conf/my.cnf:/etc/my.cnf
+      - ~/setup/mysql/log:/var/log/mysql
+
+  cache:
+    image: "redis:4.0"
+    ports:
+      - "6399:6379"
+    volumes:
+      - ~/setup/redis/conf/redis.conf:/etc/redis/redis.conf
+      - ~/setup/redis/data:/data
+
