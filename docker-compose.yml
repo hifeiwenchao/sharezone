@@ -24,15 +24,33 @@ services:
     ports:
       - "3311:3306"
     volumes:
-      - ~/setup/mysql/data:/var/lib/mysql
-      - ~/setup/mysql/conf/my.cnf:/etc/my.cnf
-      - ~/setup/mysql/log:/var/log/mysql
+      - /Users/feiwenchao/project/sharezone/setup/mysql/data:/var/lib/mysql
+      - /Users/feiwenchao/project/sharezone/setup/mysql/conf/my.cnf:/etc/my.cnf
+      - /Users/feiwenchao/project/sharezone/setup/mysql/log:/var/log/mysql
 
   cache:
     image: "redis:4.0"
     ports:
       - "6399:6379"
     volumes:
-      - ~/setup/redis/conf/redis.conf:/etc/redis/redis.conf
-      - ~/setup/redis/data:/data
+      - /Users/feiwenchao/project/sharezone/setup/redis/conf/redis.conf:/etc/redis/redis.conf
+      - /Users/feiwenchao/project/sharezone/setup/redis/data:/data
+
+#volumes:
+#  db_data:
+#    driver_opts:
+#      device: ./setup/mysql/data
+#  db_conf:
+#    driver_opts:
+#      device: ./setup/mysql/conf/my.cnf
+#  db_log:
+#    driver_opts:
+#      device: ./setup/mysql/log
+#
+#  cache_conf:
+#    driver_opts:
+#      device: ./setup/redis/conf/redis.conf
+#  cache_data:
+#    driver_opts:
+#      device: ./setup/redis/data
 

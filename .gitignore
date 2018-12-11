@@ -4,3 +4,5 @@ upload
 config.ini
 packages/*
 *.log
+setup/mysql/data/*
+setup/redis/data/*

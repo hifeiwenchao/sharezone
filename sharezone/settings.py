@@ -90,7 +90,7 @@ DATABASES = {
         # localhost会使用socket文件或者pipe，使用127.0.0.1会使用tcp连接
         'HOST': 'db',
         'PORT': 3306,
-        'USER': 'dev',
+        'USER': 'root',
         'PASSWORD': '123456',
         'TEST': {
             'CHARSET': 'utf8',
