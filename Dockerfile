@@ -10,7 +10,7 @@ RUN apt-get update \
     && apt-get install -y wget gcc make zlib1g* libssl-dev libmagic-dev \
     && rm -f /etc/nginx/conf.d/default.conf \
     && cd /opt \
-    && wget https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tgz \
+#    && wget https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tgz \
     && tar xzvf Python-3.6.5.tgz \
     && cd Python-3.6.5 \
     && ./configure --with-ssl \
